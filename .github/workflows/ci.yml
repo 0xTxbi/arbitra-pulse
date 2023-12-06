@@ -1,0 +1,73 @@
+name: CI/CD
+
+on:
+        push:
+                branches:
+                        - main
+
+jobs:
+        authentication-service:
+                runs-on: ubuntu-latest
+
+                steps:
+                        - name: Checkout Repository
+                          uses: actions/checkout@v2
+
+                        - name: Set up Node.js
+                          uses: actions/setup-node@v3
+                          with:
+                                  node-version: 14
+
+                        - name: Install Dependencies
+                          run: |
+                                  cd authentication-service
+                                  yarn install
+
+                        - name: Run Tests
+                          run: |
+                                  cd authentication-service
+                                  yarn test
+
+        sentiment-analysis-service:
+                runs-on: ubuntu-latest
+
+                steps:
+                        - name: Checkout Repository
+                          uses: actions/checkout@v2
+
+                        - name: Set up Node.js
+                          uses: actions/setup-node@v3
+                          with:
+                                  node-version: 14
+
+                        - name: Install Dependencies
+                          run: |
+                                  cd sentiment-analysis-service
+                                  yarn install
+
+                        - name: Run Tests
+                          run: |
+                                  cd sentiment-analysis-service
+                                  yarn test
+
+        news-data-service:
+                runs-on: ubuntu-latest
+
+                steps:
+                        - name: Checkout Repository
+                          uses: actions/checkout@v2
+
+                        - name: Set up Node.js
+                          uses: actions/setup-node@v3
+                          with:
+                                  node-version: 14
+
+                        - name: Install Dependencies
+                          run: |
+                                  cd news-data-service
+                                  yarn install
+
+                        - name: Run Tests
+                          run: |
+                                  cd news-data-service
+                                  yarn test
