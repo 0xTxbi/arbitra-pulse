@@ -1,4 +1,12 @@
-import { JsonController, Post, Body, UseBefore } from "routing-controllers";
+import {
+	JsonController,
+	Post,
+	Body,
+	UseBefore,
+	Authorized,
+	Put,
+	CurrentUser,
+} from "routing-controllers";
 import {
 	IsNotEmpty,
 	IsEmail,
@@ -10,6 +18,7 @@ import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
 import { User } from "../../entities/User";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 
+// create user dto
 class CreateUserDto {
 	@IsNotEmpty({ message: "Username is required" })
 	username: string;
@@ -25,12 +34,23 @@ class CreateUserDto {
 	hashedPassword: string;
 }
 
+// login user dto
 class LoginUserDto {
 	@IsNotEmpty({ message: "Username or email is required" })
 	usernameOrEmail: string;
 
 	@IsNotEmpty({ message: "Password is required" })
 	password: string;
+}
+
+// update user dto
+export class UpdateUserDto {
+	@IsNotEmpty({ message: "Email is required" })
+	@IsEmail({}, { message: "Invalid email format" })
+	email?: string;
+
+	@IsNotEmpty({ message: "Username is required" })
+	username?: string;
 }
 
 @JsonController()
@@ -117,6 +137,37 @@ export class AuthController {
 			console.error("Login failed:", errors);
 			return {
 				error: "Login failed. Please check your input and try again.",
+			};
+		}
+	}
+
+	@Authorized()
+	@UseBefore(AuthMiddleware)
+	@Put("/profile")
+	async updateProfile(
+		@CurrentUser({ required: true }) currentUser: User,
+		@Body() updateData: UpdateUserDto
+	): Promise<{ message: string } | { error: string }> {
+		try {
+			// validate user input using class-validator
+			await validateOrReject(updateData);
+
+			// update the user's profile
+			currentUser.email =
+				updateData.email || currentUser.email;
+			currentUser.username =
+				updateData.username || currentUser.username;
+
+			// optionally, update other fields like password if needed
+
+			// save the updated user to the database
+			await this.userRepository.save(currentUser);
+
+			return { message: "Profile updated successfully" };
+		} catch (errors) {
+			console.error("Profile update failed:", errors);
+			return {
+				error: "Profile update failed. Please check your input and try again.",
 			};
 		}
 	}
