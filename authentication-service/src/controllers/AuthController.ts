@@ -6,6 +6,8 @@ import {
 	Authorized,
 	Put,
 	CurrentUser,
+	Get,
+	Res,
 } from "routing-controllers";
 import {
 	IsNotEmpty,
@@ -16,11 +18,12 @@ import {
 
 import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
 import { User } from "../../entities/User";
-import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import {
 	authRateLimit,
 	profileUpdateRateLimit,
 } from "../middlewares/RateLimitMiddleware";
+import { Response, CookieOptions } from "express";
+import { AuthResponse } from "../../../types";
 
 // create user dto
 class CreateUserDto {
@@ -57,15 +60,21 @@ export class UpdateUserDto {
 	username?: string;
 }
 
+// cookie
+const cookieOptions: CookieOptions = {
+	httpOnly: true,
+	// secure: true,
+};
+
 @JsonController()
-@UseBefore(AuthMiddleware)
 export class AuthController {
 	private readonly userRepository = getCustomRepository(User);
 
 	@Post("/register")
 	async register(
-		@Body() userData: CreateUserDto
-	): Promise<{ token: string } | { error: string }> {
+		@Body() userData: CreateUserDto,
+		@Res() response: Response
+	): Promise<AuthResponse> {
 		try {
 			// validate user input using class-validator
 			await validateOrReject(userData);
@@ -79,9 +88,9 @@ export class AuthController {
 			});
 
 			if (existingUser) {
-				return {
-					error: "Username or email already exists.",
-				};
+				throw new Error(
+					"Username or email already exists."
+				);
 			}
 
 			// create a new user
@@ -93,12 +102,27 @@ export class AuthController {
 			// generate a JWT token for the new user
 			const token = newUser.generateJWT();
 
-			// respond with the token
-			return { token };
+			// set the token in an HTTP-only cookie
+			response.cookie("jwt", token, cookieOptions);
+
+			// redirect to login route
+			response.redirect("/login");
+
+			// return success message, user details, and redirect to /login route
+			return {
+				message: "Registered successfully",
+				successCode: 201,
+				userDetails: {
+					id: newUser.id,
+					username: newUser.username,
+					email: newUser.email,
+				},
+			};
 		} catch (errors) {
 			console.error("Registration failed:", errors);
 			return {
-				error: "Registration failed. Please check your input and try again.",
+				message: "Registration failed. Please check your input and try again.",
+				successCode: 500,
 			};
 		}
 	}
@@ -106,8 +130,9 @@ export class AuthController {
 	@UseBefore(authRateLimit)
 	@Post("/login")
 	async login(
-		@Body() loginData: LoginUserDto
-	): Promise<{ token: string } | { error: string }> {
+		@Body() loginData: LoginUserDto,
+		@Res() response: Response
+	): Promise<AuthResponse> {
 		try {
 			// validate user input using class-validator
 			await validateOrReject(loginData);
@@ -129,25 +154,36 @@ export class AuthController {
 				))
 			) {
 				return {
-					error: "Invalid username/email or password",
+					message: "Authentication failed. Please check your input and try again.",
+					successCode: 401,
 				};
 			}
 
 			// generate a JWT token for the authenticated user
 			const token = user.generateJWT();
 
-			// respond with the token
-			return { token };
+			// set the token in an HTTP-only cookie
+			response.cookie("jwt", token, cookieOptions);
+
+			return {
+				message: "Authenticated successfully",
+				successCode: 201,
+				userDetails: {
+					id: user.id,
+					username: user.username,
+					email: user.email,
+				},
+			};
 		} catch (errors) {
 			console.error("Login failed:", errors);
 			return {
-				error: "Login failed. Please check your input and try again.",
+				message: "Authentication failed. Please check your input and try again.",
+				successCode: 500,
 			};
 		}
 	}
 
 	@Authorized()
-	@UseBefore(AuthMiddleware)
 	@UseBefore(profileUpdateRateLimit)
 	@Put("/profile")
 	async updateProfile(
@@ -176,5 +212,13 @@ export class AuthController {
 				error: "Profile update failed. Please check your input and try again.",
 			};
 		}
+	}
+
+	@Get("/")
+	async getCurrentUser(@CurrentUser({ required: false }) user: User) {
+		if (!user) {
+			return { message: "Unauthenticated" };
+		}
+		return user;
 	}
 }

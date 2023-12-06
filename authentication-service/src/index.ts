@@ -9,18 +9,30 @@ import { verify } from "jsonwebtoken";
 const app = createExpressServer({
 	controllers: [AuthController],
 	currentUserChecker: async (action: Action) => {
-		const token = action.request.headers["authorization"];
-		if (token) {
-			const userRepository = getCustomRepository(User);
-			const decodedToken = verify(
-				token,
-				process.env.JWT_SECRET || "your-secret-key"
-			);
-			const user = await userRepository.findOne(
-				decodedToken["userId"]
-			);
-			return user;
-		}
+		return new Promise(async (resolve, reject) => {
+			console.log(action.request);
+			const cookies = action.request.cookies;
+			if (cookies && cookies.jwt) {
+				const userRepository =
+					getCustomRepository(User);
+				try {
+					const decodedToken = verify(
+						cookies.jwt,
+						process.env.JWT_SECRET ||
+							"your-secret-key"
+					);
+					const user =
+						await userRepository.findOne(
+							decodedToken["userId"]
+						);
+					resolve(user);
+				} catch (error) {
+					reject(error);
+				}
+			} else {
+				resolve(undefined);
+			}
+		});
 	},
 });
 
