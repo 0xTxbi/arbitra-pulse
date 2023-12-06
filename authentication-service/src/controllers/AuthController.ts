@@ -1,4 +1,4 @@
-import { JsonController, Post, Body } from "routing-controllers";
+import { JsonController, Post, Body, UseBefore } from "routing-controllers";
 import {
 	IsNotEmpty,
 	IsEmail,
@@ -8,6 +8,7 @@ import {
 
 import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
 import { User } from "../../entities/User";
+import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 
 class CreateUserDto {
 	@IsNotEmpty({ message: "Username is required" })
@@ -33,6 +34,7 @@ class LoginUserDto {
 }
 
 @JsonController()
+@UseBefore(AuthMiddleware)
 export class AuthController {
 	private readonly userRepository = getCustomRepository(User);
 
