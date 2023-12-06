@@ -17,6 +17,10 @@ import {
 import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
 import { User } from "../../entities/User";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
+import {
+	authRateLimit,
+	profileUpdateRateLimit,
+} from "../middlewares/RateLimitMiddleware";
 
 // create user dto
 class CreateUserDto {
@@ -99,6 +103,7 @@ export class AuthController {
 		}
 	}
 
+	@UseBefore(authRateLimit)
 	@Post("/login")
 	async login(
 		@Body() loginData: LoginUserDto
@@ -143,6 +148,7 @@ export class AuthController {
 
 	@Authorized()
 	@UseBefore(AuthMiddleware)
+	@UseBefore(profileUpdateRateLimit)
 	@Put("/profile")
 	async updateProfile(
 		@CurrentUser({ required: true }) currentUser: User,
