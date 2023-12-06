@@ -8,7 +8,8 @@
 	"private": true,
 	"type": "commonjs",
 	"scripts": {
-		"typeorm": "typeorm-ts-node-commonjs"
+		"typeorm": "typeorm-ts-node-commonjs",
+		"auth-start": "ts-node authentication-service/src/index.ts"
 	},
 	"devDependencies": {
 		"ts-node": "^10.9.1",
