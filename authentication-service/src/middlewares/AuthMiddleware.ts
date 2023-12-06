@@ -17,7 +17,10 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
 		next: NextFunction
 	): Promise<void> {
 		// extract the JWT token from the Authorization header
-		const authorizationHeader = request.headers["authorization"];
+		const authorizationHeader =
+			request.headers["authorization"] ||
+			request.headers["Authorization"];
+
 		if (!authorizationHeader) {
 			response.status(401).json({
 				error: "Unauthorized - Missing Authorization header",
@@ -25,7 +28,9 @@ export class AuthMiddleware implements ExpressMiddlewareInterface {
 			return;
 		}
 
-		const token = authorizationHeader.match(/Bearer\s(\S+)/)[1];
+		const token = (authorizationHeader as string).match(
+			/Bearer\s(\S+)/
+		)[1];
 
 		try {
 			// verify the token's signature and decode the payload

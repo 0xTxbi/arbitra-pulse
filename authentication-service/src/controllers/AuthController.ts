@@ -60,21 +60,12 @@ export class UpdateUserDto {
 	username?: string;
 }
 
-// cookie
-const cookieOptions: CookieOptions = {
-	httpOnly: true,
-	// secure: true,
-};
-
 @JsonController()
 export class AuthController {
 	private readonly userRepository = getCustomRepository(User);
 
 	@Post("/register")
-	async register(
-		@Body() userData: CreateUserDto,
-		@Res() response: Response
-	): Promise<AuthResponse> {
+	async register(@Body() userData: CreateUserDto): Promise<AuthResponse> {
 		try {
 			// validate user input using class-validator
 			await validateOrReject(userData);
@@ -102,13 +93,7 @@ export class AuthController {
 			// generate a JWT token for the new user
 			const token = newUser.generateJWT();
 
-			// set the token in an HTTP-only cookie
-			response.cookie("jwt", token, cookieOptions);
-
-			// redirect to login route
-			response.redirect("/login");
-
-			// return success message, user details, and redirect to /login route
+			// return success message, user details, and JWT
 			return {
 				message: "Registered successfully",
 				successCode: 201,
@@ -117,6 +102,7 @@ export class AuthController {
 					username: newUser.username,
 					email: newUser.email,
 				},
+				token: token,
 			};
 		} catch (errors) {
 			console.error("Registration failed:", errors);
@@ -129,10 +115,7 @@ export class AuthController {
 
 	@UseBefore(authRateLimit)
 	@Post("/login")
-	async login(
-		@Body() loginData: LoginUserDto,
-		@Res() response: Response
-	): Promise<AuthResponse> {
+	async login(@Body() loginData: LoginUserDto): Promise<AuthResponse> {
 		try {
 			// validate user input using class-validator
 			await validateOrReject(loginData);
@@ -162,17 +145,14 @@ export class AuthController {
 			// generate a JWT token for the authenticated user
 			const token = user.generateJWT();
 
-			// set the token in an HTTP-only cookie
-			response.cookie("jwt", token, cookieOptions);
-
 			return {
 				message: "Authenticated successfully",
 				successCode: 201,
 				userDetails: {
-					id: user.id,
 					username: user.username,
 					email: user.email,
 				},
+				token: token,
 			};
 		} catch (errors) {
 			console.error("Login failed:", errors);
@@ -200,8 +180,6 @@ export class AuthController {
 			currentUser.username =
 				updateData.username || currentUser.username;
 
-			// optionally, update other fields like password if needed
-
 			// save the updated user to the database
 			await this.userRepository.save(currentUser);
 
@@ -217,8 +195,15 @@ export class AuthController {
 	@Get("/")
 	async getCurrentUser(@CurrentUser({ required: false }) user: User) {
 		if (!user) {
-			return { message: "Unauthenticated" };
+			return { isAuthenticated: false };
 		}
-		return user;
+		const { email, username } = user;
+		return {
+			isAuthenticated: true,
+			user: {
+				email,
+				username,
+			},
+		};
 	}
 }

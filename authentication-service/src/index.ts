@@ -10,22 +10,40 @@ const app = createExpressServer({
 	controllers: [AuthController],
 	currentUserChecker: async (action: Action) => {
 		return new Promise(async (resolve, reject) => {
-			console.log(action.request);
-			const cookies = action.request.cookies;
-			if (cookies && cookies.jwt) {
-				const userRepository =
-					getCustomRepository(User);
+			const authorizationHeader =
+				action.request.headers["authorization"];
+			if (authorizationHeader) {
+				const token =
+					authorizationHeader.match(
+						/Bearer\s(\S+)/
+					)[1];
 				try {
 					const decodedToken = verify(
-						cookies.jwt,
+						token,
 						process.env.JWT_SECRET ||
 							"your-secret-key"
 					);
-					const user =
-						await userRepository.findOne(
-							decodedToken["userId"]
+					// check if userId is defined
+					if (decodedToken["userId"]) {
+						const userRepository =
+							getCustomRepository(
+								User
+							);
+						const user =
+							await userRepository.findOneBy(
+								decodedToken[
+									"userId"
+								]
+							);
+						resolve(user);
+					} else {
+						// handle the case where userId is not defined
+						reject(
+							new Error(
+								"User ID is not defined in the token"
+							)
 						);
-					resolve(user);
+					}
 				} catch (error) {
 					reject(error);
 				}
