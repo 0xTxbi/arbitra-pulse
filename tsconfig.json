@@ -1,18 +1,12 @@
 {
 	"compilerOptions": {
-		/* Language and Environment */
-		"target": "es2016",
-
-		/* Modules */
+		"lib": ["es5", "es6"],
+		"target": "es5",
 		"module": "commonjs",
-
-		"esModuleInterop": true,
-
-		"forceConsistentCasingInFileNames": true,
-
-		/* Type Checking */
-		"strict": true,
-
-		"skipLibCheck": true
+		"moduleResolution": "node",
+		"outDir": "./build",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"sourceMap": true
 	}
 }
