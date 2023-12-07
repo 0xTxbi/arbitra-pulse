@@ -15,14 +15,74 @@ export class StockInfo {
 	industry: string;
 
 	@Column()
-	marketCap: string;
+	marketCap: number;
 
-	@Column({ nullable: true })
-	changePercent: number;
+	@Column()
+	market: string;
 
-	@Column({ nullable: true })
-	volume: number;
+	@Column()
+	locale: string;
 
-	@Column({ nullable: true })
-	peRatio: number;
+	@Column()
+	primaryExchange: string;
+
+	@Column()
+	type: string;
+
+	@Column()
+	active: boolean;
+
+	@Column()
+	currencyName: string;
+
+	@Column()
+	cik: string;
+
+	@Column()
+	compositeFigi: string;
+
+	@Column()
+	shareClassFigi: string;
+
+	@Column()
+	phoneNumber: string;
+
+	@Column()
+	address: string;
+
+	@Column()
+	description: string;
+
+	@Column()
+	sicCode: string;
+
+	@Column()
+	sicDescription: string;
+
+	@Column()
+	tickerRoot: string;
+
+	@Column()
+	homepageUrl: string;
+
+	@Column()
+	totalEmployees: number;
+
+	@Column()
+	listDate: string;
+
+	@Column()
+	logoUrl: string;
+
+	@Column()
+	iconUrl: string;
+
+	@Column()
+	shareClassSharesOutstanding: number;
+
+	@Column()
+	weightedSharesOutstanding: number;
+
+	@Column()
+	roundLot: number;
 }
