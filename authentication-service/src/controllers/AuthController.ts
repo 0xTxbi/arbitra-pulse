@@ -7,6 +7,8 @@ import {
 	Put,
 	CurrentUser,
 	Get,
+	Param,
+	Delete,
 } from "routing-controllers";
 import {
 	IsNotEmpty,
@@ -22,6 +24,7 @@ import {
 	profileUpdateRateLimit,
 } from "../middlewares/RateLimitMiddleware";
 import { AuthResponse } from "../../../types";
+import { Watchlist } from "../../entities/Watchlist";
 
 // create user dto
 class CreateUserDto {
@@ -203,5 +206,84 @@ export class AuthController {
 				username,
 			},
 		};
+	}
+
+	@Authorized()
+	@Get("/watchlist")
+	async getWatchlist(
+		@CurrentUser({ required: true }) currentUser: User
+	): Promise<Watchlist[]> {
+		try {
+			console.log(currentUser);
+			return currentUser.watchlist;
+		} catch (error) {
+			console.error("Failed to retrieve watchlist:", error);
+			return [];
+		}
+	}
+
+	@Authorized()
+	@Post("/watchlist/add/:symbol")
+	async addToWatchlist(
+		@CurrentUser({ required: true }) currentUser: User,
+		@Param("symbol") symbol: string
+	): Promise<{ message: string } | { error: string }> {
+		try {
+			const watchlistItem = new Watchlist();
+			watchlistItem.symbol = symbol;
+			watchlistItem.user = currentUser;
+
+			await getCustomRepository(Watchlist).save(
+				watchlistItem
+			);
+
+			return { message: `Added ${symbol} to your watchlist` };
+		} catch (error) {
+			console.error("Failed to add to watchlist:", error);
+			return { error: "Failed to add to watchlist" };
+		}
+	}
+
+	@Authorized()
+	@Delete("/watchlist/remove/:symbol")
+	async removeFromWatchlist(
+		@CurrentUser({ required: true }) currentUser: User,
+		@Param("symbol") symbol: string
+	): Promise<{ message: string } | { error: string }> {
+		try {
+			const watchlistRepository =
+				getCustomRepository(Watchlist);
+
+			// utilise custom query to retrieve the watchlist entry to delete
+			const watchlistItem = await watchlistRepository
+				.createQueryBuilder("watchlist")
+				.innerJoinAndSelect("watchlist.user", "user")
+				.where("user.id = :userId", {
+					userId: currentUser.id,
+				})
+				.andWhere("watchlist.symbol = :symbol", {
+					symbol,
+				})
+				.getOne();
+
+			if (!watchlistItem) {
+				return {
+					error: `Symbol ${symbol} not found in watchlist`,
+				};
+			}
+
+			// remove the watchlist entry
+			await watchlistRepository.remove(watchlistItem);
+
+			return {
+				message: `Removed ${symbol} from your watchlist`,
+			};
+		} catch (error) {
+			console.error(
+				"Failed to remove from watchlist:",
+				error
+			);
+			return { error: "Failed to remove from watchlist" };
+		}
 	}
 }

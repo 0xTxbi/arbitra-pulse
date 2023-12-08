@@ -9,7 +9,7 @@
 	"type": "commonjs",
 	"scripts": {
 		"typeorm": "typeorm-ts-node-commonjs",
-		"auth-start": "ts-node authentication-service/src/index.ts"
+		"auth-start": "nodemon --watch . --ext ts --exec ts-node authentication-service/src/index.ts"
 	},
 	"devDependencies": {
 		"ts-node": "^10.9.1",
