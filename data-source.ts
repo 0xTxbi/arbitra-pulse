@@ -4,6 +4,7 @@ import { User } from "./authentication-service/entities/User";
 import { NewsData } from "./news-data-service/entities/NewsData";
 import { SentimentData } from "./sentiment-analysis-service/entities/SentimentData";
 import { configDotenv } from "dotenv";
+import { Watchlist } from "./authentication-service/entities/Watchlist";
 import { StockInfo } from "./stock-info-service/entities/StockInfo";
 
 // load environment variables from .env file
@@ -18,7 +19,7 @@ const AppDataSource = new DataSource({
 	database: process.env.DB_DATABASE || "",
 	synchronize: true,
 	logging: true,
-	entities: [User, NewsData, SentimentData, StockInfo],
+	entities: [User, WatchList, NewsData, SentimentData, StockInfo],
 	migrations: [],
 	ssl: {
 		rejectUnauthorized: false,
