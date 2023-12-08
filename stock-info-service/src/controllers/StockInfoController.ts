@@ -22,7 +22,11 @@ export class StockInfoController {
 	): Promise<StockInfo> {
 		try {
 			// retrieve stock information from the financial API
-			const apiUrl = `${process.env.POL_FIN_API_URL}/tickers/${stockSymbol}?apiKey=${process.env.POL_FIN_API_KEY}`;
+			const apiUrl = `${
+				process.env.POL_FIN_API_URL
+			}/tickers/${stockSymbol.toUpperCase()}?apiKey=${
+				process.env.POL_FIN_API_KEY
+			}`;
 			const response = await axios.get(apiUrl);
 
 			// map the response data to the StockInfo object
