@@ -7,7 +7,6 @@ import {
 	Put,
 	CurrentUser,
 	Get,
-	Res,
 } from "routing-controllers";
 import {
 	IsNotEmpty,
@@ -22,7 +21,6 @@ import {
 	authRateLimit,
 	profileUpdateRateLimit,
 } from "../middlewares/RateLimitMiddleware";
-import { Response, CookieOptions } from "express";
 import { AuthResponse } from "../../../types";
 
 // create user dto

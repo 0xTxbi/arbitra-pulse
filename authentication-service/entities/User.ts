@@ -1,6 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	BeforeInsert,
+	OneToMany,
+} from "typeorm";
 import * as bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { Watchlist } from "./Watchlist";
 
 @Entity()
 export class User {
@@ -18,6 +25,9 @@ export class User {
 
 	@Column()
 	hashedPassword: string;
+
+	@OneToMany(() => Watchlist, (watchlist) => watchlist.user)
+	watchlist: Watchlist[];
 
 	@BeforeInsert()
 	async hashCredentials() {
