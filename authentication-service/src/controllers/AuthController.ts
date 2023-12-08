@@ -196,33 +196,37 @@ export class AuthController {
 	@Get("/")
 	async getCurrentUser(@CurrentUser({ required: false }) user: User) {
 		if (!user) {
+			console.log(user);
 			return { isAuthenticated: false };
 		}
-		const { email, username } = user;
+		const { email, username, watchlist } = user;
 		return {
 			isAuthenticated: true,
 			user: {
 				email,
 				username,
+				watchlist,
 			},
 		};
 	}
 
-	@Authorized()
 	@Get("/watchlist")
 	async getWatchlist(
-		@CurrentUser({ required: true }) currentUser: User
+		@CurrentUser({ required: false }) user: User
 	): Promise<Watchlist[]> {
 		try {
-			console.log(currentUser);
-			return currentUser.watchlist;
+			if (!user.watchlist) {
+				throw new Error(
+					"Watchlist is not defined for the current user"
+				);
+			}
+			return user.watchlist;
 		} catch (error) {
 			console.error("Failed to retrieve watchlist:", error);
 			return [];
 		}
 	}
 
-	@Authorized()
 	@Post("/watchlist/add/:symbol")
 	async addToWatchlist(
 		@CurrentUser({ required: true }) currentUser: User,
@@ -244,7 +248,6 @@ export class AuthController {
 		}
 	}
 
-	@Authorized()
 	@Delete("/watchlist/remove/:symbol")
 	async removeFromWatchlist(
 		@CurrentUser({ required: true }) currentUser: User,

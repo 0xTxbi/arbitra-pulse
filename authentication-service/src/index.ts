@@ -23,7 +23,6 @@ const app = createExpressServer({
 						process.env.JWT_SECRET ||
 							"your-secret-key"
 					);
-					// check if userId is defined
 					if (decodedToken["userId"]) {
 						const userRepository =
 							getCustomRepository(
@@ -35,9 +34,12 @@ const app = createExpressServer({
 									"userId"
 								]
 							);
+						console.log(
+							"User found:",
+							user
+						);
 						resolve(user);
 					} else {
-						// handle the case where userId is not defined
 						reject(
 							new Error(
 								"User ID is not defined in the token"
@@ -45,6 +47,10 @@ const app = createExpressServer({
 						);
 					}
 				} catch (error) {
+					console.error(
+						"Failed to verify token:",
+						error
+					);
 					reject(error);
 				}
 			} else {

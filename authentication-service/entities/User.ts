@@ -11,7 +11,7 @@ import { Watchlist } from "./Watchlist";
 
 @Entity()
 export class User {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn({ name: "user_id" })
 	id: number;
 
 	@Column({ unique: true })
@@ -26,7 +26,9 @@ export class User {
 	@Column()
 	hashedPassword: string;
 
-	@OneToMany(() => Watchlist, (watchlist) => watchlist.user)
+	@OneToMany(() => Watchlist, (watchlist) => watchlist.user, {
+		eager: true,
+	})
 	watchlist: Watchlist[];
 
 	@BeforeInsert()
