@@ -286,4 +286,38 @@ export class AuthController {
 			return { error: "Failed to remove from watchlist" };
 		}
 	}
+
+	// clear watchlist
+	@Delete("/watchlist/clear")
+	async clearWatchlist(
+		@CurrentUser({ required: true }) currentUser: User
+	): Promise<any> {
+		try {
+			const watchlistRepository =
+				getCustomRepository(Watchlist);
+
+			// retrieve all watchlist entries for the current user
+			const watchlistItems = await watchlistRepository
+				.createQueryBuilder("watchlist")
+				.innerJoinAndSelect("watchlist.user", "user")
+				.where("user.id = :userId", {
+					userId: currentUser.id,
+				})
+				.getMany();
+
+			// clear all watchlist items
+			await watchlistRepository.remove(watchlistItems);
+
+			return {
+				message: "Cleared watchlist",
+				userWatchlist: currentUser.watchlist,
+			};
+		} catch (error) {
+			console.error(
+				"Failed to clear watchlist:",
+				error.message
+			);
+			return { error: "Failed to clear watchlist" };
+		}
+	}
 }
