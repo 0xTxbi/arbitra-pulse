@@ -224,4 +224,29 @@ export class StockInfoController {
 			return { error: "Failed to remove from watchlist" };
 		}
 	}
+
+	// clear stocks from watchlist
+	@Delete("/watchlist/clear")
+	async clearWatchlist(
+		@HeaderParams() headers: any
+	): Promise<{ message: string } | { error: string }> {
+		try {
+			const authServiceReqUrl = `http://localhost:3000/watchlist/clear`;
+
+			const response = await axios.delete(authServiceReqUrl, {
+				headers: {
+					// inject the bearer token included in the Authorization header
+					Authorization: headers.authorization,
+				},
+			});
+			console.log(response.data);
+			return response.data;
+		} catch (error) {
+			console.error(
+				"Failed to clear watchlist:",
+				error.message
+			);
+			return { error: "Failed to clear watchlist" };
+		}
+	}
 }
