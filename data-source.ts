@@ -19,7 +19,7 @@ const AppDataSource = new DataSource({
 	database: process.env.DB_DATABASE || "",
 	synchronize: true,
 	logging: true,
-	entities: [User, WatchList, NewsData, SentimentData, StockInfo],
+	entities: [User, Watchlist, NewsData, SentimentData, StockInfo],
 	migrations: [],
 	ssl: {
 		rejectUnauthorized: false,

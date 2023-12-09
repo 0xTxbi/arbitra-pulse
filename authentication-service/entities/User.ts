@@ -48,10 +48,10 @@ export class User {
 			return false;
 		}
 
-		if (
-			usernameOrEmail !== this.username &&
-			usernameOrEmail !== this.email
-		) {
+		const validUsername = this.username === usernameOrEmail;
+		const validEmail = this.email === usernameOrEmail;
+
+		if (!validUsername && !validEmail) {
 			return false;
 		}
 
@@ -65,7 +65,7 @@ export class User {
 	generateJWT() {
 		const payload = { userId: this.id, username: this.username };
 		const secret = process.env.JWT_SECRET || "your-secret-key";
-		const token = sign(payload, secret, { expiresIn: "1h" });
+		const token = sign(payload, secret, { expiresIn: "7h" });
 
 		return token;
 	}

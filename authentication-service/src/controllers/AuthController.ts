@@ -19,10 +19,7 @@ import {
 
 import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
 import { User } from "../../entities/User";
-import {
-	authRateLimit,
-	profileUpdateRateLimit,
-} from "../middlewares/RateLimitMiddleware";
+import { profileUpdateRateLimit } from "../middlewares/RateLimitMiddleware";
 import { AuthResponse } from "../../../types";
 import { Watchlist } from "../../entities/Watchlist";
 
@@ -114,7 +111,7 @@ export class AuthController {
 		}
 	}
 
-	@UseBefore(authRateLimit)
+	// @UseBefore(authRateLimit)
 	@Post("/login")
 	async login(@Body() loginData: LoginUserDto): Promise<AuthResponse> {
 		try {
