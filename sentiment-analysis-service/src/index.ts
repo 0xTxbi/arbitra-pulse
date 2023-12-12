@@ -2,11 +2,12 @@ import "reflect-metadata";
 import { createExpressServer, useContainer } from "routing-controllers";
 import { Container } from "typedi";
 import SentimentService from "./services/SentimentService";
+import { SentimentController } from "./controllers/SentimentController";
 
 useContainer(Container);
 
 const app = createExpressServer({
-	controllers: [],
+	controllers: [SentimentController],
 });
 
 const sentimentService = new SentimentService();
