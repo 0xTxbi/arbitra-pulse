@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 
 import { User } from "./authentication-service/entities/User";
-import { SentimentData } from "./sentiment-analysis-service/entities/SentimentData";
+import { SentimentResult } from "./sentiment-analysis-service/entities/SentimentResult";
 import { configDotenv } from "dotenv";
 import { Watchlist } from "./authentication-service/entities/Watchlist";
 import { StockInfo } from "./stock-info-service/entities/StockInfo";
@@ -19,7 +19,7 @@ const AppDataSource = new DataSource({
 	database: process.env.DB_DATABASE || "",
 	synchronize: true,
 	logging: true,
-	entities: [User, Watchlist, News, SentimentData, StockInfo],
+	entities: [User, Watchlist, News, SentimentResult, StockInfo],
 	migrations: [],
 	ssl: {
 		rejectUnauthorized: false,
