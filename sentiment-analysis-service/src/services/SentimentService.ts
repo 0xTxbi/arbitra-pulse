@@ -29,16 +29,13 @@ class SentimentService {
 				stockSymbol
 			);
 
-			// store fetched news articles for further analysis or use
-			this.cachedNewsArticles = newsArticles;
-
 			// perform sentiment analysis using fetched data
 			const sentimentResult = this.performSentimentAnalysis(
 				stockSymbol,
 				newsArticles,
 				stockInfo
 			);
-			console.log(this.cachedNewsArticles);
+
 			return sentimentResult;
 		} catch (error) {
 			throw new Error(
@@ -75,6 +72,7 @@ class SentimentService {
 		}
 	}
 
+	// logic to perform sentiment analysis
 	private performSentimentAnalysis(
 		stockSymbol: string,
 		newsArticles: any[],
@@ -99,14 +97,27 @@ class SentimentService {
 
 	private analyzeHeadlines(newsArticles: any[]): number {
 		// analyse sentiment based on the headlines of news articles
-		return this.cachedNewsArticles.reduce(
-			(totalSentiment, article) =>
-				totalSentiment +
+		return newsArticles.reduce((totalSentiment, article) => {
+			// extract the title from the current article
+			const articleTitle = article.title;
+
+			// get the sentiment analysis result for the title
+			const sentimentAnalysisResult =
 				this.sentimentAnalyzer.getSentiment(
-					article.title
-				).score,
-			0
-		);
+					articleTitle
+				);
+
+			console.log(sentimentAnalysisResult);
+
+			// extract the sentiment score from the analysis result
+			const sentimentScore = sentimentAnalysisResult.score;
+
+			// add the sentiment score to the totalSentiment
+			const updatedTotalSentiment =
+				totalSentiment + sentimentScore;
+
+			return updatedTotalSentiment;
+		}, 0);
 	}
 
 	private analyzeStockInfo(stockInfo: any): number {

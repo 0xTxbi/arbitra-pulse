@@ -11,7 +11,6 @@ export class SentimentController {
 	async getSentimentAnalysis(
 		@Param("stockSymbol") stockSymbol: string
 	): Promise<any> {
-		console.log("hey");
 		try {
 			const result =
 				await this.sentimentService.analyzeSentiment(
