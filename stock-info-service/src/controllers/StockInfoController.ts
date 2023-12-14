@@ -9,11 +9,10 @@ import {
 	HeaderParams,
 	Delete,
 } from "routing-controllers";
-import { StockInfo } from "../../../entities/src/StockInfo";
+import { StockInfo, Watchlist } from "arbitra-pulse-entities";
 import axios from "axios";
 import * as dotenv from "dotenv";
 import { FilteredStock } from "../types";
-import { Watchlist } from "../../../entities/src/Watchlist";
 
 dotenv.config();
 
