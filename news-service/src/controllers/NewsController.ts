@@ -1,8 +1,7 @@
-// controllers/NewsController.ts
 import { JsonController, Param, Get } from "routing-controllers";
 import axios from "axios";
-import { News } from "../../../entities/src/News";
 import * as dotenv from "dotenv";
+import { News } from "arbitra-pulse-entities";
 
 dotenv.config();
 
