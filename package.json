@@ -7,6 +7,12 @@
 	"license": "Apache",
 	"private": true,
 	"type": "commonjs",
+	"workspaces": [
+		"authentication-service",
+		"stock-info-service",
+		"new-service",
+		"sentiment-analysis-service"
+	],
 	"scripts": {
 		"typeorm": "typeorm-ts-node-commonjs",
 		"auth-start": "nodemon --watch . --ext ts --exec ts-node authentication-service/src/index.ts",
