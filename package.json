@@ -11,7 +11,8 @@
 		"typeorm": "typeorm-ts-node-commonjs",
 		"auth-start": "nodemon --watch . --ext ts --exec ts-node authentication-service/src/index.ts",
 		"stock-info-start": "nodemon --watch . --ext ts --exec ts-node stock-info-service/src/index.ts",
-		"news-service-start": "nodemon --watch . --ext ts --exec ts-node news-service/src/index.ts"
+		"news-service-start": "nodemon --watch . --ext ts --exec ts-node news-service/src/index.ts",
+		"sentiment-service-start": "nodemon --watch . --ext ts --exec ts-node sentiment-analysis-service/src/index.ts"
 	},
 	"devDependencies": {
 		"nodemon": "^3.0.2",
@@ -31,9 +32,11 @@
 		"express": "^4.18.2",
 		"express-rate-limit": "^7.1.5",
 		"jsonwebtoken": "^9.0.2",
+		"natural": "^6.10.4",
 		"pg": "^8.11.3",
 		"reflect-metadata": "^0.1.13",
 		"routing-controllers": "^0.10.4",
+		"typedi": "^0.10.0",
 		"typeorm": "^0.3.17"
 	}
 }
