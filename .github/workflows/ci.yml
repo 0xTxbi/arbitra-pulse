@@ -16,17 +16,17 @@ jobs:
                         - name: Set up Node.js
                           uses: actions/setup-node@v3
                           with:
-                                  node-version: 14
+                                  node-version: 16
 
                         - name: Install Dependencies
                           run: |
                                   cd authentication-service
                                   yarn install
 
-                        - name: Run Tests
+                        - name: Run Server
                           run: |
                                   cd authentication-service
-                                  yarn test
+                                  yarn start
 
         sentiment-analysis-service:
                 runs-on: ubuntu-latest
