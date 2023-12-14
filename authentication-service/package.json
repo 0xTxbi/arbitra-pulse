@@ -25,5 +25,8 @@
 		"reflect-metadata": "^0.1.13",
 		"routing-controllers": "^0.10.4",
 		"typeorm": "^0.3.17"
+	},
+	"engines": {
+		"node": ">=16"
 	}
 }
