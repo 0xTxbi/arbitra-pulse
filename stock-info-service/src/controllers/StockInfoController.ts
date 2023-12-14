@@ -9,12 +9,11 @@ import {
 	HeaderParams,
 	Delete,
 } from "routing-controllers";
-import { StockInfo } from "../../entities/StockInfo";
+import { StockInfo } from "../../../entities/StockInfo";
 import axios from "axios";
 import * as dotenv from "dotenv";
 import { FilteredStock } from "../types";
-import { Watchlist } from "../../../authentication-service/entities/Watchlist";
-import { User } from "../../../authentication-service/entities/User";
+import { Watchlist } from "../../../entities/Watchlist";
 
 dotenv.config();
 

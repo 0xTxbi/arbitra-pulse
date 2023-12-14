@@ -1,8 +1,9 @@
 import { Middleware, ExpressMiddlewareInterface } from "routing-controllers";
 import { verify, TokenExpiredError, JsonWebTokenError } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
-import { User } from "../../entities/User";
+
+import { getCustomRepository } from "../../utils/getCustomRepository";
+import { User } from "arbitra-pulse-entities";
 
 // extend Request interface
 interface RequestWithUser extends Request {

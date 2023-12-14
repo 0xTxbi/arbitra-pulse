@@ -1,9 +1,10 @@
 import "reflect-metadata";
 import { Action, createExpressServer } from "routing-controllers";
 import { AuthController } from "./controllers/AuthController";
-import { getCustomRepository } from "../../shared/utils/getCustomRepository";
-import { User } from "../entities/User";
+
 import { verify } from "jsonwebtoken";
+import { getCustomRepository } from "../utils/getCustomRepository";
+import { User } from "arbitra-pulse-entities";
 
 // set up express server
 const app = createExpressServer({

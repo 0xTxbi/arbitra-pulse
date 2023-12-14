@@ -1,4 +1,3 @@
-import { DataSource } from "typeorm";
 import {
 	News,
 	User,
@@ -7,6 +6,7 @@ import {
 	StockInfo,
 } from "arbitra-pulse-entities";
 import * as dotenv from "dotenv";
+import { DataSource } from "typeorm";
 
 // load environment variables from .env file
 dotenv.config();

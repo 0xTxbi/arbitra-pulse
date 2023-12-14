@@ -17,11 +17,11 @@ import {
 	validateOrReject,
 } from "class-validator";
 
-import { getCustomRepository } from "../../../shared/utils/getCustomRepository";
-import { User } from "../../entities/User";
 import { profileUpdateRateLimit } from "../middlewares/RateLimitMiddleware";
-import { AuthResponse } from "../../../types";
-import { Watchlist } from "../../entities/Watchlist";
+
+import { getCustomRepository } from "../../utils/getCustomRepository";
+import { AuthResponse } from "../../types";
+import { User, Watchlist } from "arbitra-pulse-entities";
 
 // create user dto
 class CreateUserDto {

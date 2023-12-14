@@ -1,7 +1,7 @@
 // controllers/NewsController.ts
 import { JsonController, Param, Get } from "routing-controllers";
 import axios from "axios";
-import { News } from "../../entities/News";
+import { News } from "../../../entities/News";
 import * as dotenv from "dotenv";
 
 dotenv.config();
