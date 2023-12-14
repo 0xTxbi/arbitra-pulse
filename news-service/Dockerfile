@@ -17,7 +17,7 @@ RUN yarn global add nodemon ts-node typescript
 COPY . .
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 3002
 
 # Define environment variables
 ENV NODE_ENV=production
