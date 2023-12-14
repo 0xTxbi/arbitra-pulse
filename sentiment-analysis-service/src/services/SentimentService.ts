@@ -1,12 +1,14 @@
 import * as natural from "natural";
 import axios from "axios";
 import { Service } from "typedi";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 @Service()
 class SentimentService {
 	private sentimentAnalyzer: any;
 	// store fetched articles
-	private cachedNewsArticles: any[] = [];
 
 	constructor() {
 		// initialize the sentiment analyzer
@@ -47,7 +49,7 @@ class SentimentService {
 	private async fetchStockInfo(stockSymbol: string): Promise<any> {
 		try {
 			const response = await axios.get(
-				`http://localhost:3001/stock/${stockSymbol}`
+				`${process.env.STOCK_INFO_SERVICE}/stock/${stockSymbol}`
 			);
 
 			return response.data;
@@ -61,7 +63,7 @@ class SentimentService {
 	private async fetchNewsData(stockSymbol: string): Promise<any[]> {
 		try {
 			const response = await axios.get(
-				`http://localhost:3002/news/${stockSymbol}`
+				`${process.env.NEWS_SERVICE}/news/${stockSymbol}`
 			);
 
 			return response.data;
