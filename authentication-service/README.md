@@ -51,13 +51,13 @@ users to manage their tracked stock symbols effortlessly.
 
       ```bash
       cd authentication-service
-      npm install
+      yarn install
       ```
 
 3. **Run the Microservice**
 
       ```bash
-      npm start
+      yarn start
       ```
 
 4. **Explore Endpoints**
