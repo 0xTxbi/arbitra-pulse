@@ -5,11 +5,12 @@
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"emitDecoratorMetadata": true,
+		"declaration": true,
 		"experimentalDecorators": true,
 		"sourceMap": true,
 		"forceConsistentCasingInFileNames": true,
 		"outDir": "./dist"
 	},
-	"include": ["/**/*.ts"],
+	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"]
 }
