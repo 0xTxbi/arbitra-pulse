@@ -1,0 +1,8 @@
+{
+	"name": "arbitra-pulse-entities",
+	"version": "1.0.1",
+	"description": "essential typeorm entities for arbitra-pulse",
+	"main": "index.ts",
+	"author": "0xTxbi",
+	"license": "MIT"
+}
