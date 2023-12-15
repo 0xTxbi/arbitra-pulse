@@ -1,53 +1,89 @@
-# Sentiment Analysis Microservice
+# Sentiment Analysis Microservice API
 
-This microservice provides real-time sentiment insights for specific stocks.
-Leveraging Natural Language Processing (NLP), it analyzes news articles related
-to a stock and integrates data from the Stock Info microservice.
+This microservice is an integral part of the Stock Sentiment Analysis API,
+specializing in sentiment analysis for specific stocks. It seamlessly integrates
+with the Authentication, Stock Info, and News microservices.
+
+**Testing Endpoint**: You can test the API using the following endpoint:
+
+- [Sentiment Analysis Microservice API](https://arbitra-pulse-sentiment-analysis.onrender.com)
 
 ## Features
 
-- **NLP-Driven Analysis:** Utilizes Natural Language Processing for
-  near-accurate sentiment assessments.
-- **Data Integration:** Fetches real-time stock information from the Stock Info
+- **Real-time Sentiment Analysis**: Utilizes Natural Language Processing (NLP)
+  for accurate sentiment assessment.
+- **Data Integration**: Fetches real-time stock information from the Stock Info
   service and retrieves news articles from the News service for sentiment
   analysis.
-- **Rich API Responses:** Returns sentiment details, including sentiment, and
-  confidence.
 
-## Getting Started
+## Endpoints
 
-1. **Clone the Repository:**
+1. **Analyze Sentiment**
+
+      - `GET /sentiment/:stockSymbol`
+      - **Response:**
+           - Sentiment details: sentiment, confidence, and stock symbol.
+
+## How to Use
+
+1. **Clone the Repository**
 
       ```bash
       git clone <repository-url>
       ```
 
-2. **Install Dependencies:**
+2. **Install Dependencies**
 
       ```bash
+      cd sentiment-analysis-service
       yarn install
       ```
 
-3. **Run the Microservice:**
+3. **Run the Microservice Locally**
+
       ```bash
       yarn start
       ```
 
-## API Endpoints
+4. **Explore Endpoint Locally**
+      - Use tools like Postman and Insomnia to test the
+        `/sentiment/:stockSymbol` endpoint.
+      - Ensure proper data integration with the Stock Info and News services.
 
-- **Endpoint: `/sentiment/:stockSymbol`**
-     - **Method:** GET
-     - **Response:**
-          - Sentiment details: sentiment, confidence.
+## Deployment to Cloud Service
 
-## Testing
+1. **Build Docker Image**
 
-1. Spin up the Sentiment Analysis service.
-2. Ensure the stock info and news service are running
-3. Make a GET request to `/sentiment/:stockSymbol`.
-4. Explore sentiment analysis results.
+      ```bash
+      docker build -t sentiment-analysis-service .
+      ```
 
-## Integration
+2. **Tag Docker Image (Optional, for pushing to a registry)**
 
-Ensure that the Sentiment Analysis service is integrated with the Stock Info and
-News Data services for comprehensive functionality.
+      ```bash
+      docker tag sentiment-analysis-service:latest your-registry-username/sentiment-analysis-service:latest
+      ```
+
+      Replace `your-registry-username` with your actual registry username.
+
+3. **Run Docker Container Locally**
+
+      ```bash
+      docker run -p 3000:3000 \
+        -e AUTH_SERVICE=auth_service_value \
+        -e STOCK_INFO_SERVICE=stock_info_service_value \
+        -e NEWS_SERVICE=news_service_value \
+        -d sentiment-analysis-service
+      ```
+
+4. **Deploy to Cloud Service**
+
+      - Deploy the Docker image to your cloud service. Follow the
+        platform-specific instructions.
+      - Set environment variables in your cloud service and other settings.
+
+Environment Variables:
+
+- `AUTH_SERVICE`: URL of the running auth service.
+- `STOCK_INFO_SERVICE`: URL of the running stock info service.
+- `NEWS_SERVICE`: URL of the running news service.
