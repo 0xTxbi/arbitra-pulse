@@ -1,77 +1,117 @@
-# Stock Info Microservice
+# Stock Info Microservice for Stock Sentiment Analysis API
 
-This microservice provides endpoints for retrieving detailed information about
-stocks, searching for stocks based on keywords, and managing a user's watchlist.
+This microservice is an integral part of the Stock Sentiment Analysis API,
+focusing on providing detailed information about stocks, enabling stock
+searches, and managing a user's watchlist.
 
-### Installation
+**Testing Endpoint**: You can test the API using the following endpoint:
 
-1. Clone the repository:
+- [Stock Info Microservice API](https://arbitra-pulse-stock-info.onrender.com)
 
-```bash
-git clone <repository_url>
-```
+## Features
 
-2. Install dependencies:
+- **Retrieve Stock Information**: Get detailed information about a specific
+  stock using its symbol.
+- **Search for Stocks**: Search for stocks based on keywords and receive a list
+  of filtered stock objects.
+- **Get Watchlist**: Retrieve the user's watchlist, including tracked stock
+  symbols.
+- **Add to Watchlist**: Add a stock symbol to the user's watchlist.
+- **Remove from Watchlist**: Remove a stock symbol from the user's watchlist.
+- **Clear Watchlist**: Remove all stocks from the user's watchlist.
 
-```bash
-yarn install
-```
+## Endpoints
 
-### Running the Microservice
+1. **Retrieve Stock Information**
 
-```bash
-yarn start
-```
+      - `GET /stock/:stockSymbol`
 
-The microservice will be running at `http://localhost:3001`.
+2. **Search for Stocks**
 
-## API Endpoints
+      - `GET /search/:query`
 
-### 1. Retrieve Stock Information
+3. **Get Watchlist**
 
-```http
-GET /stock/:stockSymbol
-```
+      - `GET /watchlist`
 
-Retrieves detailed information about a specific stock identified by its symbol.
+4. **Add to Watchlist**
 
-### 2. Search for Stocks
+      - `POST /watchlist/add/:symbol`
 
-```http
-GET /search/:query
-```
+5. **Remove from Watchlist**
 
-Searches for stocks based on a keyword and returns a list of filtered stock
-objects.
+      - `DELETE /watchlist/remove/:symbol`
 
-### 3. Get Watchlist
+6. **Clear Watchlist**
 
-```http
-GET /watchlist
-```
+      - `DELETE /watchlist/clear`
 
-Retrieves the user's watchlist.
+## How to Use
 
-### 4. Add to Watchlist
+1. **Clone the Repository**
 
-```http
-POST /watchlist/add/:symbol
-```
+      ```bash
+      git clone <repository-url>
+      ```
 
-Adds a stock symbol to the user's watchlist.
+2. **Install Dependencies**
 
-### 5. Remove from Watchlist
+      ```bash
+      cd stock-info-service
+      yarn install
+      ```
 
-```http
-DELETE /watchlist/remove/:symbol
-```
+3. **Run the Microservice Locally**
 
-Removes a stock symbol from the user's watchlist.
+      ```bash
+      yarn start
+      ```
 
-### 6. Clear Watchlist
+4. **Explore Endpoints Locally**
+      - Use tools like Postman or Insomnia to test the various endpoints.
+      - Ensure proper authentication when interacting with protected routes.
 
-```http
-DELETE /watchlist/clear
-```
+## Deployment to Cloud Service
 
-Clears all stocks from the user's watchlist.
+1. **Build Docker Image**
+
+      ```bash
+      docker build -t stock-info-microservice .
+      ```
+
+2. **Tag Docker Image (Optional, for pushing to a registry)**
+
+      ```bash
+      docker tag stock-info-microservice:latest your-registry-username/stock-info-microservice:latest
+      ```
+
+      Replace `your-registry-username` with your actual registry username.
+
+3. **Run Docker Container Locally**
+
+      ```bash
+      docker run -p 3000:3000 \
+        -e POL_FIN_API_URL=your_polygon_financial_api_url \
+        -e POL_FIN_API_KEY=your_polygon_financial_api_key \
+        -e TD_FIN_API_URL=your_twelve_data_api_url \
+        -e TD_FIN_API_KEY=your_twelve_data_api_key \
+        -d stock-info-service
+      ```
+
+      Ensure to replace the API and financial credentials with your actual
+      configurations.
+
+4. **Deploy to Cloud Service**
+
+      - Deploy the Docker image to your cloud service. Follow the
+        platform-specific instructions.
+      - Set environment variables in your cloud service for API and financial
+        configurations.
+
+## Configuration
+
+- Update the API and financial configurations in your `.env` file to match your
+  environment.
+
+**Note:** Ensure proper security measures when handling sensitive information,
+such as API keys and credentials.
