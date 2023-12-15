@@ -3,6 +3,10 @@
 This microservice is part of the Stock Sentiment Analysis API and focuses on
 fetching stock-related news. It provides an endpoint to retrieve news articles.
 
+**Testing Endpoint**: You can test the API using the following endpoint:
+
+- [Stock News Microservice API](https://arbitra-pulse-news.onrender.com)
+
 ## Features
 
 - **Retrieve News by Stock Symbol:**
