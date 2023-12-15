@@ -1,7 +1,7 @@
 # News Service
 
-This microservice fetches stock-related news from a third-party API. It provides
-an endpoint to retrieve news articles.
+This microservice is part of the Stock Sentiment Analysis API and focuses on
+fetching stock-related news. It provides an endpoint to retrieve news articles.
 
 ## Features
 
@@ -9,7 +9,7 @@ an endpoint to retrieve news articles.
      - **Endpoint:** `/news/:stockSymbol`
      - Retrieve relevant news articles for a specific stock symbol.
 
-## Getting Started
+### Getting Started
 
 1. **Clone the Repository:**
 
@@ -24,15 +24,34 @@ an endpoint to retrieve news articles.
       yarn install
       ```
 
-3. **Configure Third-Party API:**
-
-      - Update the third-party API details in `NewsController.ts`.
-
-4. **Run the Application:**
+3. **Run the Application:**
 
       ```bash
       yarn start
       ```
 
-5. **API Endpoints:**
-      - Explore the available endpoints at `http://localhost:3000/news`:
+## Dockerization
+
+### Build Docker Image
+
+```bash
+docker build -t news-service .
+```
+
+### Run Docker Container
+
+```bash
+docker run -p 3000:3000 news-service
+```
+
+### Dependencies
+
+This microservice makes use of the News Data Service API. Ensure that the News
+Data Service API is accessible.
+
+### Environment Variables
+
+The following environment variables are required for the microservice to run:
+
+- `ND_NEWS_API_URL`: URL of the News Data Service API.
+- `ND_NEWS_API_KEY`: API key for accessing the News Data Service API.
