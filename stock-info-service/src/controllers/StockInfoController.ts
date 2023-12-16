@@ -2,9 +2,7 @@ import {
 	JsonController,
 	Get,
 	Param,
-	QueryParams,
 	Post,
-	CurrentUser,
 	OnUndefined,
 	HeaderParams,
 	Delete,
@@ -136,8 +134,7 @@ export class StockInfoController {
 	@OnUndefined(200)
 	async getWatchlist(@HeaderParams() headers: any): Promise<Watchlist[]> {
 		try {
-			const authServiceUrl =
-				"http://localhost:3000/watchlist";
+			const authServiceUrl = `${process.env.AUTH_SERVICE}/watchlist`;
 
 			const response = await axios.get(authServiceUrl, {
 				headers: {
@@ -172,7 +169,7 @@ export class StockInfoController {
 		@Param("symbol") symbol: string
 	): Promise<any> {
 		try {
-			const authServiceReqUrl = `http://localhost:3000/watchlist/add/${symbol}`;
+			const authServiceReqUrl = `${process.env.AUTH_SERVICE}/watchlist/add/${symbol}`;
 
 			const response = await axios.post(
 				authServiceReqUrl,
@@ -203,7 +200,7 @@ export class StockInfoController {
 		@Param("symbol") symbol: string
 	): Promise<{ message: string } | { error: string }> {
 		try {
-			const authServiceReqUrl = `http://localhost:3000/watchlist/remove/${symbol}`;
+			const authServiceReqUrl = `${process.env.AUTH_SERVICE}/watchlist/remove/${symbol}`;
 			console.log(authServiceReqUrl);
 
 			const response = await axios.delete(authServiceReqUrl, {
@@ -229,7 +226,7 @@ export class StockInfoController {
 		@HeaderParams() headers: any
 	): Promise<{ message: string } | { error: string }> {
 		try {
-			const authServiceReqUrl = `http://localhost:3000/watchlist/clear`;
+			const authServiceReqUrl = `${process.env.AUTH_SERVICE}/watchlist/clear`;
 
 			const response = await axios.delete(authServiceReqUrl, {
 				headers: {
