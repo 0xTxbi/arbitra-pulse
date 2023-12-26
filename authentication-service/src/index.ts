@@ -1,5 +1,6 @@
 import "reflect-metadata";
-import { Action, createExpressServer } from "routing-controllers";
+import express from "express";
+import { Action, useExpressServer } from "routing-controllers";
 import { AuthController } from "./controllers/AuthController";
 
 import { verify } from "jsonwebtoken";
@@ -9,7 +10,28 @@ import { User } from "arbitra-pulse-entities";
 import cors, { CorsOptions } from "cors";
 
 // set up express server
-const app = createExpressServer({
+const app = express();
+
+// cors config
+const corsOptions: CorsOptions = {
+	origin: (origin, callback) => {
+		const whitelist = [
+			"http://localhost:3000",
+			process.env.CLIENT_DOMAIN,
+		];
+		if (whitelist.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error("Not allowed by CORS"));
+		}
+	},
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+useExpressServer({
 	controllers: [AuthController],
 	currentUserChecker: async (action: Action) => {
 		return new Promise(async (resolve, reject) => {
@@ -62,25 +84,6 @@ const app = createExpressServer({
 		});
 	},
 });
-
-// cors config
-const corsOptions: CorsOptions = {
-	origin: (origin, callback) => {
-		const whitelist = [
-			"http://localhost:3000",
-			process.env.CLIENT_DOMAIN,
-		];
-		if (whitelist.indexOf(origin) !== -1 || !origin) {
-			callback(null, true);
-		} else {
-			callback(new Error("Not allowed by CORS"));
-		}
-	},
-	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-	credentials: true,
-};
-
-app.use(cors(corsOptions));
 
 // add middleware to set cors headers
 app.use((req, res, next) => {
