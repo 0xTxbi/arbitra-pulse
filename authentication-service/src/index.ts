@@ -65,13 +65,12 @@ const app = createExpressServer({
 
 // enable cors for all routes
 const corsOptions: CorsOptions = {
-	origin: process.env.CLIENT_DOMAIN || "http://localhost:3000",
+	origin: "*",
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
 };
 
-// temporarily allow anyl routes
-app.use(cors());
+app.use(cors(corsOptions));
 
 // start the server
 const PORT = process.env.PORT || 3000;
