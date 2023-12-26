@@ -65,7 +65,17 @@ const app = createExpressServer({
 
 // enable cors for all routes
 const corsOptions: CorsOptions = {
-	origin: "*",
+	origin: (origin, callback) => {
+		const whitelist = [
+			"http://localhost:3000",
+			process.env.CLIENT_DOMAIN,
+		]; // replace with your allowed origins
+		if (whitelist.indexOf(origin) !== -1 || !origin) {
+			callback(null, true);
+		} else {
+			callback(new Error("Not allowed by CORS"));
+		}
+	},
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
 };
