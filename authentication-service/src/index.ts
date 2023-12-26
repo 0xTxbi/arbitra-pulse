@@ -6,6 +6,8 @@ import { verify } from "jsonwebtoken";
 import { getCustomRepository } from "../utils/getCustomRepository";
 import { User } from "arbitra-pulse-entities";
 
+import cors, { CorsOptions } from "cors";
+
 // set up express server
 const app = createExpressServer({
 	controllers: [AuthController],
@@ -60,6 +62,15 @@ const app = createExpressServer({
 		});
 	},
 });
+
+// enable cors for all routes
+const corsOptions: CorsOptions = {
+	origin: process.env.CLIENT_DOMAIN || "http://localhost:3000",
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // start the server
 const PORT = process.env.PORT || 3000;
