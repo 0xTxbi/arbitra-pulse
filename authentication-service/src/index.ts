@@ -70,7 +70,8 @@ const corsOptions: CorsOptions = {
 	credentials: true,
 };
 
-app.use(cors(corsOptions));
+// temporarily allow anyl routes
+app.use(cors());
 
 // start the server
 const PORT = process.env.PORT || 3000;
