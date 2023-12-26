@@ -9,6 +9,21 @@ import { User } from "arbitra-pulse-entities";
 // set up express server
 const app = createExpressServer({
 	controllers: [AuthController],
+	cors: {
+		origin: (origin, callback) => {
+			const whitelist = [
+				"http://localhost:3000",
+				process.env.CLIENT_DOMAIN,
+			];
+			if (whitelist.indexOf(origin) !== -1 || !origin) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+		credentials: true,
+	},
 	currentUserChecker: async (action: Action) => {
 		return new Promise(async (resolve, reject) => {
 			const authorizationHeader =
@@ -59,7 +74,6 @@ const app = createExpressServer({
 			}
 		});
 	},
-	cors: true,
 });
 
 // start the server
