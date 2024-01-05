@@ -7,17 +7,7 @@ dotenv.config();
 
 @Service()
 class SentimentService {
-	private sentimentAnalyzer: any;
-	// store fetched articles
-
-	constructor() {
-		// initialize the sentiment analyzer
-		this.sentimentAnalyzer = new natural.SentimentAnalyzer(
-			"English",
-			natural.PorterStemmer,
-			"afinn"
-		);
-	}
+	constructor() {}
 
 	async analyzeSentiment(stockSymbol: string): Promise<any> {
 		try {
@@ -74,56 +64,58 @@ class SentimentService {
 		}
 	}
 
-	// logic to perform sentiment analysis
 	private performSentimentAnalysis(
 		stockSymbol: string,
 		newsArticles: any[],
 		stockInfo: any
 	): any {
-		const overallSentiment =
-			this.analyzeHeadlines(newsArticles) +
-			this.analyzeStockInfo(stockInfo);
+		// initialize the sentiment analyzer
+		const sentimentAnalyzer = new natural.SentimentAnalyzer(
+			"English",
+			natural.PorterStemmer,
+			"afinn"
+		);
 
-		const sentimentResult = {
-			stockSymbol: stockSymbol,
-			sentiment:
-				overallSentiment >= 0 ? "positive" : "negative",
-			confidence:
-				Math.abs(overallSentiment) /
-				(newsArticles.length + 1),
-			currentStockPrice: stockInfo.currentStockPrice,
+		// analyze sentiment based on the content of news articles
+		const headlineSentiment = newsArticles.reduce(
+			(totalSentiment, article) => {
+				// ensure article.content is a string
+				const content =
+					typeof article.content === "string"
+						? article.content
+						: "";
+				const sentimentAnalysisResult =
+					sentimentAnalyzer.getSentiment(
+						content.split(" ")
+					);
+				return totalSentiment + sentimentAnalysisResult;
+			},
+			0
+		);
+
+		// calculate the average sentiment score
+		const averageSentimentScore =
+			headlineSentiment / newsArticles.length;
+
+		// calculate the sentiment score on a scale of 0 to 100
+		const sentimentScore = Math.round(
+			(averageSentimentScore + 1) * 50
+		);
+
+		// determine the sentiment based on the average sentiment score
+		const sentiment =
+			averageSentimentScore > 0 ? "positive" : "negative";
+
+		// calculate the confidence level
+		const confidenceLevel =
+			(Math.abs(averageSentimentScore) /
+				(newsArticles.length + 1)) *
+			100;
+
+		return {
+			score: sentimentScore,
+			confidenceLevel: confidenceLevel,
 		};
-
-		return sentimentResult;
-	}
-
-	private analyzeHeadlines(newsArticles: any[]): number {
-		// analyse sentiment based on the headlines of news articles
-		return newsArticles.reduce((totalSentiment, article) => {
-			// extract the title from the current article
-			const articleTitle = article.title;
-
-			// get the sentiment analysis result for the title
-			const sentimentAnalysisResult =
-				this.sentimentAnalyzer.getSentiment(
-					articleTitle
-				);
-
-			console.log(sentimentAnalysisResult);
-
-			// extract the sentiment score from the analysis result
-			const sentimentScore = sentimentAnalysisResult.score;
-
-			// add the sentiment score to the totalSentiment
-			const updatedTotalSentiment =
-				totalSentiment + sentimentScore;
-
-			return updatedTotalSentiment;
-		}, 0);
-	}
-
-	private analyzeStockInfo(stockInfo: any): number {
-		return 0;
 	}
 }
 

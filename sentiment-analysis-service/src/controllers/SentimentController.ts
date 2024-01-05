@@ -16,7 +16,7 @@ export class SentimentController {
 				await this.sentimentService.analyzeSentiment(
 					stockSymbol
 				);
-			return { success: true, data: result };
+			return { success: true, sentiment: result };
 		} catch (error) {
 			return { success: false, error: error.message };
 		}
