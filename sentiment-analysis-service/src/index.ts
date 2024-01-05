@@ -8,6 +8,21 @@ useContainer(Container);
 
 const app = createExpressServer({
 	controllers: [SentimentController],
+	cors: {
+		origin: (origin, callback) => {
+			const whitelist = [
+				"http://localhost:3000",
+				process.env.CLIENT_DOMAIN,
+			];
+			if (whitelist.indexOf(origin) !== -1 || !origin) {
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
+		methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+		credentials: true,
+	},
 });
 
 const sentimentService = new SentimentService();
