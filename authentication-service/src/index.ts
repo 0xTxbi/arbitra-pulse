@@ -37,7 +37,7 @@ export const currentUserChecker = async (
 	action: Action
 ): Promise<User | undefined> => {
 	// routes that don't require authentication
-	const publicRoutes = ["/register", "login", "/"];
+	const publicRoutes = ["/register", "login"];
 
 	// skip token verification for the public routes
 	if (publicRoutes.includes(action.request.url)) {
