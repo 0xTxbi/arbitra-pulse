@@ -64,15 +64,10 @@ export class UpdateUserDto {
 @Service()
 export class AuthController {
 	private readonly userRepository = getCustomRepository(User);
-	// inject Dashboard service
 	private readonly dashboardService: DashboardService;
 
 	constructor(dashboardService: DashboardService) {
-		console.log(
-			"AuthController constructor called with dashboardService:",
-			dashboardService
-		);
-		this.dashboardService = new DashboardService();
+		this.dashboardService = dashboardService;
 	}
 
 	@Post("/register")

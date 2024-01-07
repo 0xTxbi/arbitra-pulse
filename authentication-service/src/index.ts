@@ -1,9 +1,13 @@
 import "reflect-metadata";
-import { Action, createExpressServer } from "routing-controllers";
+import { Action, createExpressServer, useContainer } from "routing-controllers";
 import { AuthController } from "./controllers/AuthController";
 import { verify } from "jsonwebtoken";
 import { getCustomRepository } from "../utils/getCustomRepository";
 import { User } from "arbitra-pulse-entities";
+import Container from "typedi";
+import { DashboardService } from "./services/Dashboard.service";
+
+useContainer(Container);
 
 const extractTokenFromHeader = (header: string | undefined): string | null => {
 	if (!header) return null;
@@ -73,6 +77,10 @@ const app = createExpressServer({
 	},
 	currentUserChecker: currentUserChecker,
 });
+
+const dashboardService = new DashboardService();
+
+app.set("dashboardService", dashboardService);
 
 // start the server
 const PORT = process.env.PORT || 3000;
