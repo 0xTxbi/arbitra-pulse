@@ -1,9 +1,13 @@
 import { User } from "arbitra-pulse-entities";
 import { getUpcomingEarnings } from "../../utils/requests";
+import { Service } from "typedi";
 
+@Service()
 export class DashboardService {
 	async getDashboardData(currentUser: User) {
 		try {
+			// log user
+			console.log(currentUser);
 			// fetch dashboard components data
 			const upcomingEarnings = await getUpcomingEarnings();
 

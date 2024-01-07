@@ -22,6 +22,8 @@ import { profileUpdateRateLimit } from "../middlewares/RateLimitMiddleware";
 import { getCustomRepository } from "../../utils/getCustomRepository";
 import { AuthResponse } from "../../types";
 import { User, Watchlist } from "arbitra-pulse-entities";
+import { DashboardService } from "../services/Dashboard.service";
+import { Service } from "typedi";
 
 // create user dto
 class CreateUserDto {
@@ -59,8 +61,19 @@ export class UpdateUserDto {
 }
 
 @JsonController()
+@Service()
 export class AuthController {
 	private readonly userRepository = getCustomRepository(User);
+	// inject Dashboard service
+	private readonly dashboardService: DashboardService;
+
+	constructor(dashboardService: DashboardService) {
+		console.log(
+			"AuthController constructor called with dashboardService:",
+			dashboardService
+		);
+		this.dashboardService = new DashboardService();
+	}
 
 	@Post("/register")
 	async register(@Body() userData: CreateUserDto): Promise<AuthResponse> {
@@ -188,6 +201,23 @@ export class AuthController {
 				error: "Profile update failed. Please check your input and try again.",
 			};
 		}
+	}
+
+	// user's dashboard
+	@Get("/dashboard")
+	async getDashboard(@CurrentUser({ required: true }) currentUser: User) {
+		// ensure user is authenticated
+		if (!currentUser) {
+			return { error: "User not authenticated" };
+		}
+
+		// fetch dashboard info from injected dashboard service
+		const dashboardInfo =
+			await this.dashboardService.getDashboardData(
+				currentUser
+			);
+
+		return dashboardInfo;
 	}
 
 	@Get("/")
