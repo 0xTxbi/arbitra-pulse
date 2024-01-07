@@ -138,3 +138,5 @@ dist
 .github/workflows/ci.yml
 authentication-service/fly.toml
 stock-info-service/fly.toml
+news-service/fly.toml
+sentiment-analysis-service/fly.toml
