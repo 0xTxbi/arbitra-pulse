@@ -6,6 +6,7 @@ import {
 	OnUndefined,
 	HeaderParams,
 	Delete,
+	Params,
 } from "routing-controllers";
 import { StockInfo, Watchlist } from "arbitra-pulse-entities";
 import axios from "axios";
@@ -39,6 +40,25 @@ export class StockInfoController {
 			await this.stockInfoService.getStockMarketGainers();
 
 		return marketGainers;
+	}
+
+	// retrieve stock price
+	@Get("/quote/:ticker/:market")
+	async quoteStock(
+		@Param("ticker") ticker: string,
+		@Param("market") market: string
+	) {
+		if (!ticker || !market) {
+			throw new Error(
+				"Please provide both ticker and market"
+			);
+		}
+		const stockQuote = await this.stockInfoService.getStockQuote(
+			ticker,
+			market
+		);
+
+		return stockQuote;
 	}
 
 	// retrieve stock info
