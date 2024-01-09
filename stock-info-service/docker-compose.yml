@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+
+auth-service:
+
+build: ./stock-info-service
+
+ports:
+        - "3000:3000"
+
+environment:
+        - NODE_ENV=development
+
+        - PORT=3000
+
+        - DB_CONNECTION_STRING=your_connection_string
+
+volumes:
+        - ./stock-info-service:/usr/src/app
+
+        - /usr/src/app/node_modules
