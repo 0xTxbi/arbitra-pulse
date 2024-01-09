@@ -43,16 +43,8 @@ export class StockInfoController {
 	}
 
 	// retrieve stock price
-	@Get("/quote/:ticker/:market")
-	async quoteStock(
-		@Param("ticker") ticker: string,
-		@Param("market") market: string
-	) {
-		if (!ticker || !market) {
-			throw new Error(
-				"Please provide both ticker and market"
-			);
-		}
+	@Get("/quote/:ticker")
+	async quoteStock(@Param("ticker") ticker: string) {
 		const stockQuote = await this.stockInfoService.getStockQuote(
 			ticker
 		);
