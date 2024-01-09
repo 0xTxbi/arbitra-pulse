@@ -11,6 +11,8 @@ import { StockInfo, Watchlist } from "arbitra-pulse-entities";
 import axios from "axios";
 import * as dotenv from "dotenv";
 import { FilteredStock } from "../types";
+import { StockInfoService } from "../services/StockInfo.service";
+import { Service } from "typedi";
 
 dotenv.config();
 
@@ -22,7 +24,23 @@ class ApiError extends Error {
 }
 
 @JsonController()
+@Service()
 export class StockInfoController {
+	private readonly stockInfoService: StockInfoService;
+
+	constructor(stockInfoService: StockInfoService) {
+		this.stockInfoService = stockInfoService;
+	}
+
+	// retrieve stock market's top gainers
+	@Get("/market-gainers")
+	async getStockMarketGainers() {
+		const marketGainers =
+			await this.stockInfoService.getStockMarketGainers();
+
+		return marketGainers;
+	}
+
 	// retrieve stock info
 	@Get("/stock/:stockSymbol")
 	async getStockInfo(

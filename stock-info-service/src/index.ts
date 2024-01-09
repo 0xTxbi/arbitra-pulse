@@ -1,6 +1,10 @@
 import "reflect-metadata";
-import { createExpressServer } from "routing-controllers";
+import { createExpressServer, useContainer } from "routing-controllers";
 import { StockInfoController } from "./controllers/StockInfoController";
+import Container from "typedi";
+import { StockInfoService } from "./services/StockInfo.service";
+
+useContainer(Container);
 
 const app = createExpressServer({
 	controllers: [StockInfoController],
@@ -20,6 +24,11 @@ const app = createExpressServer({
 		credentials: true,
 	},
 });
+
+// stock info service
+const stockInfoService = new StockInfoService();
+
+app.set("stockInfoService", stockInfoService);
 
 app.listen(3001, () => {
 	console.log("the Stock Info Service is running on port 3001");
