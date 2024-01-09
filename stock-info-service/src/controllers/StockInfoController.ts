@@ -54,11 +54,21 @@ export class StockInfoController {
 			);
 		}
 		const stockQuote = await this.stockInfoService.getStockQuote(
-			ticker,
-			market
+			ticker
 		);
 
 		return stockQuote;
+	}
+
+	// retrieve stock historical data
+	@Get("/historical-data/:ticker")
+	async getStockHistoricalData(@Param("ticker") ticker: string) {
+		const stockHistoricalData =
+			await this.stockInfoService.getStockHistoricalData(
+				ticker
+			);
+
+		return stockHistoricalData;
 	}
 
 	// retrieve stock info
