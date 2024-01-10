@@ -39,7 +39,7 @@ class SentimentService {
 	private async fetchStockInfo(stockSymbol: string): Promise<any> {
 		try {
 			const response = await axios.get(
-				`${process.env.STOCK_INFO_SERVICE}/stock/${stockSymbol}`
+				`${process.env.STOCK_INFO_SERVICE}/quote/${stockSymbol}`
 			);
 
 			return response.data;
