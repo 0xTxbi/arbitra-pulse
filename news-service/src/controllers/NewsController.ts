@@ -2,6 +2,7 @@ import { JsonController, Param, Get } from "routing-controllers";
 import axios from "axios";
 import * as dotenv from "dotenv";
 import { News } from "arbitra-pulse-entities";
+import { formatDistanceToNow, parseISO } from "date-fns";
 
 dotenv.config();
 
@@ -24,8 +25,11 @@ export class NewsController {
 						? article.creator.join(", ")
 						: "",
 					description: article.description,
-					content: article.content,
-					pubDate: article.pubDate,
+					image: article.image_url,
+					pubDate: formatDistanceToNow(
+						parseISO(article.pubDate),
+						{ addSuffix: true }
+					),
 				})
 			);
 
