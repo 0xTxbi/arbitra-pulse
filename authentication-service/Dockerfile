@@ -4,14 +4,18 @@ FROM node:16
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
+# Copy package.json to the working directory
+COPY package.json ./
+
 # Install dependencies using yarn
 RUN yarn install --production
 
-# Copy the rest of the files
-COPY . .
-
 # Install nodemon, ts-node, and TypeScript globally
 RUN yarn global add nodemon ts-node typescript
+
+
+# Copy the rest of the files
+COPY . .
 
 # Expose the port the app runs on
 EXPOSE 3000
